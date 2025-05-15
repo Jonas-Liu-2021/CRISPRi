@@ -16,11 +16,8 @@ gr_CDS_neg <- gr_CDS[strand(gr_CDS) == "-"]
 gr_CDS_neg <- GenomicRanges::reduce(gr_CDS_neg)
 
 ## 绘制环形图(有正负链)
-# 先筛选并合并essential genes，防止基因堆叠
-gr_fc1 <- gr[gr$fc_lt_1]   # 864个essential gene（logFC < -1）
-gr_fc1_merged <- GenomicRanges::reduce(gr_fc1)
-
-gr_fc2 <- gr[gr$fc_lt_2]   # 630个essential gene (logFC < -2)
+# 取出logFC < -2且p<0.05的基因
+gr_fc2 <- gr[which(gr$fitness_defect)]   
 gr_fc2_merged <- GenomicRanges::reduce(gr_fc2)
 
 # 根据 logFC 的绝对值范围构造对称的 ylim
@@ -151,42 +148,42 @@ p <- ggbio() +
   circle(gr[!is.na(gr$logFC)], 
          geom = "bar",
          aes(y = logFC), 
-         color = "gray70",
+         color = "#ABA7A7",
          radius = 11,      # 基线半径，0 对应半径 10
          trackWidth = 15,  # 环带的厚度
          space.skip = 0,
          ylim = ylim_range) +
   circle(gr_ess,
          geom = "rect",
-         color = "orange", 
+         color = "#9DC3E6", 
          space.skip = 0,
          radius = 26,
          trackWidth = 2,
-         fill = "orange",
+         fill = "#9DC3E6",
          rect.inter.n = 1800) +
   circle(gr_fc2_merged,
          geom = "rect",
-         color = "green", 
+         color = "#FF5050", 
          space.skip = 0,
          radius = 29,
          trackWidth = 2,
-         fill = "green",
+         fill = "#FF5050",
          rect.inter.n = 1800) +
   circle(gr_CDS_pos,        # 正链 CDS
          geom = "rect",
-         color = "steelblue",
+         color = "#DBDBDB",
          space.skip = 0,
          radius = 32,       # 根据需要调整 radius，使正负链层不重叠
          trackWidth = 2,
-         fill = "steelblue",
+         fill = "#DBDBDB",
          rect.inter.n = 1800) +
   circle(gr_CDS_neg,        # 负链 CDS，可选用另一种颜色
          geom = "rect",
-         color = "red",
+         color = "#002060",
          space.skip = 0,
          radius = 35,       # 注意选择合适的 radius 使两圈不重叠
          trackWidth = 2,
-         fill = "red",
+         fill = "#002060",
          rect.inter.n = 1800) +
   circle(gr,
          geom = "ideo",
@@ -198,7 +195,7 @@ p <- ggbio() +
   circle(gr,
          geom = "scale",
          scale.n = 5,
-         size = 5,
+         size = 20,
          radius = 38,
          trackWidth = 2,
          space.skip = 0) + # 必须用 space.skip = 0 才能让首尾闭合
@@ -206,12 +203,12 @@ p <- ggbio() +
            x = 0,
            y = 0,
            label = "Aeromonas \ndhakensis \ngenome",
-           size = 9,
+           size = 36,
            fontface = "bold")
 p
 
 # 保存图片
-pdf("Figures/cicular_pos_neg_ess.pdf", width = 10, height = 9.5)
+pdf("Figures/cicular_pos_neg_ess.pdf", width = 40, height = 38)
 print(p)  # 显示图形
 dev.off()
 
@@ -244,19 +241,19 @@ p <- ggbio() +
          rect.inter.n = 1800) +
   circle(gr_CDS_pos,        # 正链 CDS
          geom = "rect",
-         color = "steelblue",
+         color = "steelblue1",
          space.skip = 0,
          radius = 32,       # 根据需要调整 radius，使正负链层不重叠
          trackWidth = 2,
-         fill = "steelblue",
+         fill = "steelblue1",
          rect.inter.n = 1800) +
   circle(gr_CDS_neg,        # 负链 CDS，可选用另一种颜色
          geom = "rect",
-         color = "red",
+         color = "firebrick1",
          space.skip = 0,
          radius = 35,       # 注意选择合适的 radius 使两圈不重叠
          trackWidth = 2,
-         fill = "red",
+         fill = "firebrick1",
          rect.inter.n = 1800) +
   circle(gr,
          geom = "ideo",
@@ -279,7 +276,7 @@ p <- ggbio() +
            size = 900,
            fontface = "bold")
 p
-pdf("Figures/cicular_pos_neg_ess3.pdf", width = 1000, height = 950)
+pdf("Figures/cicular_pos_neg_ess2.pdf", width = 1000, height = 950)
 print(p)  # 显示图形
 dev.off()
 

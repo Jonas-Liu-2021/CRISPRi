@@ -55,15 +55,46 @@ COG_count <- df_split %>%
   left_join(COG_meaning, by = "COG_category") %>%
   arrange(desc(Count))
 
-# 绘制条形图
+# 绘制条形图(有数字)
+p=ggplot(COG_count, aes(x = reorder(Function, Count), y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Count),hjust = -0.4,color = "black",size = 4) +
+  coord_flip() +
+  labs(x = "COG Functional Category", y = "Number of Genes", title = "Gene Count per COG Functional Category") +
+  theme_minimal()+
+  theme(
+    axis.text.y = element_text(size = 12, margin = margin(r = -20)),  # 标签靠近柱子
+    axis.text.x = element_text(size = 11),
+    axis.title = element_text(size = 12, face = "bold"),
+    plot.title = element_text(size = 14, face = "bold", hjust = 0)
+  )
+
+p
+
+
+# 保存图像和统计信息
+pdf("COG/COG_category.pdf", width = 12, height = 9)
+print(p)
+dev.off()
+
+# 绘制条形图(无数字)
 p=ggplot(COG_count, aes(x = reorder(Function, Count), y = Count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +
   labs(x = "COG Functional Category", y = "Number of Genes", title = "Gene Count per COG Functional Category") +
-  theme_minimal()
+  theme_minimal()+
+  theme(
+    axis.text.y = element_text(size = 12, margin = margin(r = -20)),  # 标签靠近柱子
+    axis.text.x = element_text(size = 11),
+    axis.title = element_text(size = 12, face = "bold"),
+    plot.title = element_text(size = 14, face = "bold", hjust = 0)
+  )
+
+p
+
 
 # 保存图像和统计信息
-pdf("COG/COG_category.pdf", width = 12, height = 9)
+pdf("COG/COG_category(no_count).pdf", width = 12, height = 9)
 print(p)
 dev.off()
 
